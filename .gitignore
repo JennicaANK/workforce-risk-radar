@@ -211,16 +211,15 @@ __marimo__/
 
 
 # Data
-data/raw/
-data/interim/
-data/external/
 *.zip
 *.7z
-
+*.tar
+*.gz
 
 # Mac / notebooks
 .DS_Store
 .ipynb_checkpoints/
-
+__pycache__/
+*.pyc
 
 
