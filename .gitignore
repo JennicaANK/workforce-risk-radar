@@ -205,3 +205,22 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+
+
+
+
+# Data
+data/raw/
+data/interim/
+data/external/
+*.zip
+*.7z
+
+
+# Mac / notebooks
+.DS_Store
+.ipynb_checkpoints/
+
+
+
