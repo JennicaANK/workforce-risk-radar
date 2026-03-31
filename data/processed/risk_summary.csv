@@ -1,0 +1,4 @@
+risk_level,warn_layoffs,ca_unemployment_rate,indeed_job_postings_index,news_volume,news_tone
+Low,3185.85,5.91,131.53,14038.85,-1.51
+Medium,5774.75,5.11,108.96,15242.8,-1.63
+High,11521.15,5.35,107.49,24990.5,-1.74
