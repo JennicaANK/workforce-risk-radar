@@ -1,0 +1,24 @@
+model_name,task,feature,importance
+Linear Regression (Macro only),final_regression,ca_unemployment_rate_lag3,0.0014224105392219837
+Linear Regression (Macro only),final_regression,fed_funds_rate_lag1,0.18439068685202276
+Linear Regression (Macro only),final_regression,indeed_job_postings_index_lag1,0.0038075161516946186
+Ridge Regression (Macro + News),comparison_regression,ca_unemployment_rate_lag3,-0.09713703784289086
+Ridge Regression (Macro + News),comparison_regression,fed_funds_rate_lag1,0.14581102749831493
+Ridge Regression (Macro + News),comparison_regression,indeed_job_postings_index_lag1,-0.07515255559518119
+Ridge Regression (Macro + News),comparison_regression,news_volume_log1p_lag1,0.03749318023078438
+Ridge Regression (Macro + News),comparison_regression,news_tone_lag1,-0.06415740375589447
+Random Forest Regressor (Macro + News),comparison_regression,ca_unemployment_rate_lag3,0.0753390808917813
+Random Forest Regressor (Macro + News),comparison_regression,fed_funds_rate_lag1,0.7063646506143758
+Random Forest Regressor (Macro + News),comparison_regression,indeed_job_postings_index_lag1,0.0448680486895367
+Random Forest Regressor (Macro + News),comparison_regression,news_volume_log1p_lag1,0.07975108503517087
+Random Forest Regressor (Macro + News),comparison_regression,news_tone_lag1,0.09367713476913535
+Logistic Regression,comparison_classification,ca_unemployment_rate_lag3,0.30775970448401674
+Logistic Regression,comparison_classification,fed_funds_rate_lag1,0.6489478480010811
+Logistic Regression,comparison_classification,indeed_job_postings_index_lag1,0.4979478919035188
+Logistic Regression,comparison_classification,news_volume_log1p_lag1,0.4014878783008576
+Logistic Regression,comparison_classification,news_tone_lag1,0.27096715813107575
+Random Forest Classifier,comparison_classification,ca_unemployment_rate_lag3,0.16172549541534034
+Random Forest Classifier,comparison_classification,fed_funds_rate_lag1,0.30378825314846364
+Random Forest Classifier,comparison_classification,indeed_job_postings_index_lag1,0.23065948925331423
+Random Forest Classifier,comparison_classification,news_volume_log1p_lag1,0.17026574387251334
+Random Forest Classifier,comparison_classification,news_tone_lag1,0.13356101831036835
