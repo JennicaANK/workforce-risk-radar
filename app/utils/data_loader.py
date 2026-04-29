@@ -29,3 +29,11 @@ def load_classification_metrics():
 def load_final_model_coefficients():
     path = DATA_DIR / "final_model_coefficients.csv"
     return pd.read_csv(path)
+
+
+def load_master_monthly():
+    path = DATA_DIR / "master_monthly.csv"
+    df = pd.read_csv(path)
+    if "month" in df.columns:
+        df["month"] = pd.to_datetime(df["month"])
+    return df
