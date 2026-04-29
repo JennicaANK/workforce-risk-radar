@@ -50,9 +50,9 @@ layout = html.Div(
                 html.Ol(
                     [
                         html.Li("Collect and clean California WARN layoff notices"),
-                        html.Li("Aggregate WARN rows into monthly California layoff totals"),
+                        html.Li("Aggregate WARN records into monthly California layoff totals"),
                         html.Li("Merge WARN with macroeconomic indicators and layoff-related news features"),
-                        html.Li("Create lagged predictors to reflect the early-warning goal"),
+                        html.Li("Create lagged predictors to support the early-warning goal"),
                         html.Li("Split the data into train and test periods by time"),
                         html.Li("Compare multiple regression and classification models"),
                         html.Li("Choose the deployed model based on test-period performance"),
@@ -67,11 +67,10 @@ layout = html.Div(
             [
                 html.H2("Why the project uses monthly data"),
                 html.P(
-                    "The final modeling dataset uses monthly statewide observations. "
-                    "This keeps the modeling target interpretable and matches the dashboard goal of tracking broad layoff risk over time."
+                    "The final modeling dataset uses monthly statewide observations. This keeps the modeling target interpretable and matches the dashboard goal of tracking broad layoff risk over time."
                 ),
                 html.P(
-                    "The project began with much more raw WARN detail, but the final dashboard focuses on monthly California layoff totals so the trend, model output, and risk level are easy to explain."
+                    "The project began with much more raw WARN detail, but the final dashboard focuses on monthly California layoff totals so the trend, model output, and risk level are easier to explain."
                 ),
             ],
             className="text-section",
@@ -93,7 +92,7 @@ layout = html.Div(
                     ]
                 ),
                 html.P(
-                    "These lag choices were guided by the earlier lead-lag analysis, where several signals showed meaningful relationships one to three months before WARN changes." 
+                    "These lag choices were guided by the earlier lead-lag analysis, where federal funds rate, unemployment, and news tone showed meaningful relationships one to three months before WARN changes."
                 ),
             ],
             className="text-section",
@@ -140,11 +139,10 @@ layout = html.Div(
             [
                 html.H2("How we evaluated the models"),
                 html.P(
-                    "We did not use a random split. Instead, we kept the last 12 months as the test period so evaluation would reflect future prediction rather than random shuffling."
+                    "We did not use a random split. Instead, we kept the last 12 months as the test period so evaluation would better reflect future forecasting conditions."
                 ),
                 html.P(
-                    "For regression, we compared models using test RMSE, along with training metrics to check whether more complex models were overfitting. "
-                    "For classification, we compared accuracy, precision, recall, and macro F1."
+                    "For regression, we compared models using test RMSE and training metrics to check whether more complex models were overfitting. For classification, we compared accuracy, precision, recall, and macro F1."
                 ),
             ],
             className="text-section",
@@ -157,8 +155,7 @@ layout = html.Div(
                     "The final deployed model is Linear Regression (Macro only). It was chosen because it had the best test RMSE among the regression models and generalized better than the more complex alternatives."
                 ),
                 html.P(
-                    "This choice is important because the larger models looked better in some training metrics, but they did not perform better on unseen months. "
-                    "For the deployed dashboard, reliability mattered more than complexity."
+                    "This choice matters because the larger models looked better in some training metrics, but they did not perform better on unseen months. For the deployed dashboard, reliability mattered more than complexity."
                 ),
             ],
             className="text-section",
@@ -180,13 +177,38 @@ layout = html.Div(
         html.Section(
             [
                 html.H2("Final deployment logic"),
-                html.Ul(
+                html.Div(
                     [
-                        html.Li("Input: cleaned monthly dataset with lagged macro predictors"),
-                        html.Li("Prediction: monthly WARN layoffs from the final macro-only linear regression"),
-                        html.Li("Risk label: Low / Medium / High based on predicted layoffs"),
-                        html.Li("Website output: latest risk level, predicted layoffs, trend chart, and supporting findings"),
-                    ]
+                        html.Div(
+                            [
+                                html.H3("Input"),
+                                html.P("Cleaned monthly dataset with lagged macro predictors"),
+                            ],
+                            className="method-card",
+                        ),
+                        html.Div(
+                            [
+                                html.H3("Prediction"),
+                                html.P("Monthly WARN layoffs from the final macro-only linear regression"),
+                            ],
+                            className="method-card",
+                        ),
+                        html.Div(
+                            [
+                                html.H3("Risk label"),
+                                html.P("Low / Medium / High based on predicted layoffs"),
+                            ],
+                            className="method-card",
+                        ),
+                        html.Div(
+                            [
+                                html.H3("Website output"),
+                                html.P("Latest risk level, predicted layoffs, trend chart, and supporting findings"),
+                            ],
+                            className="method-card",
+                        ),
+                    ],
+                    className="method-grid",
                 ),
             ],
             className="text-section",

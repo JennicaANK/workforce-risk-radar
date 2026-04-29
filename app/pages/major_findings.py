@@ -12,23 +12,16 @@ from utils.data_loader import (
 
 dash.register_page(__name__, name="Major Findings")
 
-# -----------------------------
-# Load exported final-model files
-# -----------------------------
 regression_metrics = load_regression_metrics().copy()
 classification_metrics = load_classification_metrics().copy()
 coefficients = load_final_model_coefficients().copy()
 
-# Round metric tables for display
 for df in [regression_metrics, classification_metrics]:
     numeric_cols = df.select_dtypes(include="number").columns
     df[numeric_cols] = df[numeric_cols].round(3)
 
 coefficients["coefficient"] = coefficients["coefficient"].round(3)
 
-# -----------------------------
-# Preliminary-results findings
-# -----------------------------
 lag_heatmap_df = pd.DataFrame(
     {
         "lag_0": [-0.011, 0.59, -0.38, -0.44, 0.76],
@@ -56,16 +49,10 @@ risk_summary = pd.DataFrame(
     }
 )
 
-# -----------------------------
-# Summary values for highlight cards
-# -----------------------------
 best_reg_row = regression_metrics.loc[regression_metrics["test_rmse"].idxmin()]
 best_reg_name = best_reg_row["model_name"]
 best_reg_rmse = best_reg_row["test_rmse"]
 
-# -----------------------------
-# Charts
-# -----------------------------
 coef_fig = px.bar(
     coefficients,
     x="feature",
@@ -117,9 +104,11 @@ risk_fig.update_layout(
     margin=dict(l=40, r=20, t=60, b=40),
 )
 
-# -----------------------------
-# Shared table styling
-# -----------------------------
+graph_config = {
+    "displayModeBar": False,
+    "responsive": True,
+}
+
 table_style = {
     "style_table": {"overflowX": "auto"},
     "style_cell": {
@@ -146,8 +135,7 @@ layout = html.Div(
     [
         html.H1("Major Findings"),
         html.P(
-            "This page brings together the strongest results from the project: "
-            "lead-lag patterns, model comparison, risk-level findings, and the final deployed model."
+            "This page brings together the strongest results from the project: lead-lag patterns, model comparison, risk-level findings, and the final deployed model."
         ),
 
         html.Div(
@@ -203,11 +191,9 @@ layout = html.Div(
             [
                 html.H2("Lead-lag relationships"),
                 html.P(
-                    "The strongest same-month relationship came from news volume. "
-                    "Among the leading indicators, the federal funds rate was strongest at a 1-month lag, "
-                    "unemployment was strongest at a 3-month lag, and news tone was strongest at a 1-month lag."
+                    "The strongest same-month relationship came from news volume. Among the leading indicators, the federal funds rate was strongest at a 1-month lag, unemployment was strongest at a 3-month lag, and news tone was strongest at a 1-month lag."
                 ),
-                dcc.Graph(figure=heatmap_fig),
+                dcc.Graph(figure=heatmap_fig, config=graph_config),
             ],
             className="chart-section",
         ),
@@ -224,8 +210,7 @@ layout = html.Div(
                     **table_style,
                 ),
                 html.P(
-                    "Even though forecasting monthly layoffs is still difficult, the macro-only linear regression "
-                    "had the lowest test RMSE, so it was selected as the deployed model.",
+                    "Even though forecasting monthly layoffs is still difficult, the macro-only linear regression had the lowest test RMSE, so it was selected as the deployed model.",
                     className="section-note",
                 ),
             ],
@@ -236,8 +221,7 @@ layout = html.Div(
             [
                 html.H2("Classification model comparison"),
                 html.P(
-                    "These models were tested as supporting comparisons only. "
-                    "They were not used as the deployed risk engine."
+                    "These models were tested as supporting comparisons only. They were not used as the deployed risk engine."
                 ),
                 dash_table.DataTable(
                     data=classification_metrics.to_dict("records"),
@@ -259,7 +243,7 @@ layout = html.Div(
                     columns=[{"name": c, "id": c} for c in risk_summary.columns],
                     **table_style,
                 ),
-                dcc.Graph(figure=risk_fig),
+                dcc.Graph(figure=risk_fig, config=graph_config),
             ],
             className="chart-section",
         ),
@@ -270,7 +254,7 @@ layout = html.Div(
                 html.P(
                     "These are the coefficients from the final deployed macro-only linear regression model."
                 ),
-                dcc.Graph(figure=coef_fig),
+                dcc.Graph(figure=coef_fig, config=graph_config),
             ],
             className="chart-section",
         ),
