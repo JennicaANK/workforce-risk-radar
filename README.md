@@ -48,6 +48,7 @@ pip install -r requirements.txt
 
 ## 3. End-to-End Pipeline
 
+```text
 Data Sources
    |
    |-- WARN Act Layoff Data (California)
@@ -80,9 +81,11 @@ Dashboard (app/)
    |
    |-- Loads processed data
    |-- Displays EDA, methods, and results
+```
 
 ## 4. Repository Structure & Key Code Locations
 
+```text
 workforce-risk-radar/
 │
 ├── app/
@@ -110,3 +113,4 @@ workforce-risk-radar/
 ├── requirements.txt
 ├── README.md
 └── LICENSE
+```
