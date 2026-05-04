@@ -1,6 +1,0 @@
-dash>=2.5.0
-pandas
-plotly
-scikit-learn
-numpy
-matplotlib
