@@ -1,4 +1,4 @@
 feature,coefficient
-fed_funds_rate_lag1,0.23378454939057858
-ca_unemployment_rate_lag3,0.060307082797403655
-indeed_job_postings_index_lag1,0.00871138357823662
+fed_funds_rate_lag1,0.23378454939057872
+ca_unemployment_rate_lag3,0.06030708279740373
+indeed_job_postings_index_lag1,0.008711383578236654
