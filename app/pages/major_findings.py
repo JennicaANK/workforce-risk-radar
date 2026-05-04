@@ -1,5 +1,5 @@
 import dash
-from dash import html, dcc, dash_table
+from dash import html, dcc, dash_table, Input, Output, callback
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -8,6 +8,7 @@ from utils.data_loader import (
     load_regression_metrics,
     load_classification_metrics,
     load_final_model_coefficients,
+    load_final_predictions,
 )
 
 dash.register_page(__name__, name="Major Findings")
@@ -15,6 +16,7 @@ dash.register_page(__name__, name="Major Findings")
 regression_metrics = load_regression_metrics().copy()
 classification_metrics = load_classification_metrics().copy()
 coefficients = load_final_model_coefficients().copy()
+website_predictions = load_final_predictions().copy()
 
 for df in [regression_metrics, classification_metrics]:
     numeric_cols = df.select_dtypes(include="number").columns
@@ -64,7 +66,6 @@ coef_fig.update_layout(
     xaxis_title="Feature",
     yaxis_title="Coefficient",
     showlegend=False,
-    margin=dict(l=40, r=20, t=60, b=40),
 )
 
 heatmap_fig = go.Figure(
@@ -84,7 +85,6 @@ heatmap_fig.update_layout(
     xaxis_title="Lag",
     yaxis_title="Predictor",
     template="plotly_white",
-    margin=dict(l=40, r=20, t=60, b=40),
 )
 
 risk_fig = px.bar(
@@ -101,7 +101,6 @@ risk_fig.update_layout(
     xaxis_title="Risk level",
     yaxis_title="Average news volume",
     showlegend=False,
-    margin=dict(l=40, r=20, t=60, b=40),
 )
 
 graph_config = {
@@ -123,7 +122,6 @@ table_style = {
         "backgroundColor": "#0f172a",
         "color": "white",
         "fontWeight": "bold",
-        "border": "none",
     },
     "style_data": {
         "backgroundColor": "white",
@@ -140,60 +138,38 @@ layout = html.Div(
 
         html.Div(
             [
-                html.Div(
-                    [
-                        html.H3("Final Deployed Model"),
-                        html.P(best_reg_name, className="finding-value"),
-                    ],
-                    className="finding-card",
-                ),
-                html.Div(
-                    [
-                        html.H3("Best Test RMSE"),
-                        html.P(f"{best_reg_rmse:.3f}", className="finding-value"),
-                    ],
-                    className="finding-card",
-                ),
-                html.Div(
-                    [
-                        html.H3("Risk Engine"),
-                        html.P("Regression-based", className="finding-value"),
-                    ],
-                    className="finding-card",
-                ),
-                html.Div(
-                    [
-                        html.H3("Strongest Lead Signal"),
-                        html.P("Fed funds (1 month)", className="finding-value"),
-                    ],
-                    className="finding-card",
-                ),
+                html.Div([html.H3("Final Model"), html.P(best_reg_name)], className="finding-card"),
+                html.Div([html.H3("Best Test RMSE"), html.P(f"{best_reg_rmse:.3f}")], className="finding-card"),
+                html.Div([html.H3("Risk Engine"), html.P("Regression-based")], className="finding-card"),
+                html.Div([html.H3("Strongest Lead Signal"), html.P("Fed funds (1 month)")], className="finding-card"),
             ],
             className="finding-grid",
         ),
 
         html.Section(
             [
-                html.H2("Main takeaways"),
-                html.Ul(
-                    [
-                        html.Li("Some macro and news signals showed short lead relationships with WARN layoffs."),
-                        html.Li("The macro-only linear regression generalized better than the more complex models."),
-                        html.Li("Classification models were weaker, so they were not used as the deployed website engine."),
-                        html.Li("High-risk months were associated with substantially higher layoff-related news volume."),
-                    ]
+                html.H2("Interactive Actual vs Predicted Layoffs"),
+
+                dcc.RadioItems(
+                    id="line-toggle",
+                    options=[
+                        {"label": "Actual Only", "value": "actual"},
+                        {"label": "Predicted Only", "value": "pred"},
+                        {"label": "Both", "value": "both"},
+                    ],
+                    value="both",
+                    labelStyle={"display": "inline-block", "margin-right": "15px"},
                 ),
+
+                dcc.Graph(id="layoff-line-chart"),
             ],
-            className="text-section",
+            className="chart-section",
         ),
 
         html.Section(
             [
                 html.H2("Lead-lag relationships"),
-                html.P(
-                    "The strongest same-month relationship came from news volume. Among the leading indicators, the federal funds rate was strongest at a 1-month lag, unemployment was strongest at a 3-month lag, and news tone was strongest at a 1-month lag."
-                ),
-                dcc.Graph(figure=heatmap_fig, config=graph_config),
+                dcc.Graph(figure=heatmap_fig),
             ],
             className="chart-section",
         ),
@@ -201,17 +177,10 @@ layout = html.Div(
         html.Section(
             [
                 html.H2("Regression model comparison"),
-                html.P(
-                    "We compared multiple regression models and selected the one that performed best on unseen months."
-                ),
                 dash_table.DataTable(
                     data=regression_metrics.to_dict("records"),
                     columns=[{"name": c, "id": c} for c in regression_metrics.columns],
                     **table_style,
-                ),
-                html.P(
-                    "Even though forecasting monthly layoffs is still difficult, the macro-only linear regression had the lowest test RMSE, so it was selected as the deployed model.",
-                    className="section-note",
                 ),
             ],
             className="table-block",
@@ -220,9 +189,6 @@ layout = html.Div(
         html.Section(
             [
                 html.H2("Classification model comparison"),
-                html.P(
-                    "These models were tested as supporting comparisons only. They were not used as the deployed risk engine."
-                ),
                 dash_table.DataTable(
                     data=classification_metrics.to_dict("records"),
                     columns=[{"name": c, "id": c} for c in classification_metrics.columns],
@@ -235,15 +201,12 @@ layout = html.Div(
         html.Section(
             [
                 html.H2("Risk-level findings"),
-                html.P(
-                    "High-risk months had much higher average WARN layoffs and much higher average layoff-related news volume."
-                ),
                 dash_table.DataTable(
                     data=risk_summary.round(2).to_dict("records"),
                     columns=[{"name": c, "id": c} for c in risk_summary.columns],
                     **table_style,
                 ),
-                dcc.Graph(figure=risk_fig, config=graph_config),
+                dcc.Graph(figure=risk_fig),
             ],
             className="chart-section",
         ),
@@ -251,13 +214,42 @@ layout = html.Div(
         html.Section(
             [
                 html.H2("Final deployed model coefficients"),
-                html.P(
-                    "These are the coefficients from the final deployed macro-only linear regression model."
-                ),
-                dcc.Graph(figure=coef_fig, config=graph_config),
+                dcc.Graph(figure=coef_fig),
             ],
             className="chart-section",
         ),
     ],
     className="text-page",
 )
+
+@callback(
+    Output("layoff-line-chart", "figure"),
+    Input("line-toggle", "value"),
+)
+def update_layoff_chart(view):
+    fig = go.Figure()
+
+    if view in ["actual", "both"]:
+        fig.add_trace(go.Scatter(
+            x=website_predictions["month"],
+            y=website_predictions["warn_layoffs"],
+            mode="lines+markers",
+            name="Actual"
+        ))
+
+    if view in ["pred", "both"]:
+        fig.add_trace(go.Scatter(
+            x=website_predictions["month"],
+            y=website_predictions["pred_warn_layoffs"],
+            mode="lines+markers",
+            name="Predicted"
+        ))
+
+    fig.update_layout(
+        title="Actual vs Predicted WARN Layoffs",
+        xaxis_title="Month",
+        yaxis_title="WARN layoffs",
+        template="plotly_white",
+    )
+
+    return fig
