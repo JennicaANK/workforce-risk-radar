@@ -96,6 +96,49 @@ layout = html.Div(
 
         html.Section(
             [
+                html.H2("Project Objective"),
+                html.P(
+                    "This project builds a workforce risk radar for California by combining WARN layoff "
+                    "records, macroeconomic indicators, and layoff-related news signals into a monthly "
+                    "early-warning dashboard."
+                ),
+                html.Div(
+                    [
+                        html.Div(
+                            [
+                                html.H3("Main goals"),
+                                html.Ul(
+                                    [
+                                        html.Li("Predict monthly layoffs using macroeconomic and news signals."),
+                                        html.Li("Identify early warning indicators that move before layoff spikes."),
+                                        html.Li("Translate model predictions into clear risk levels."),
+                                    ]
+                                ),
+                            ],
+                            className="method-card",
+                        ),
+                        html.Div(
+                            [
+                                html.H3("Data sources"),
+                                html.Ul(
+                                    [
+                                        html.Li("California WARN notices"),
+                                        html.Li("FRED macroeconomic indicators"),
+                                        html.Li("GDELT news volume and tone data"),
+                                    ]
+                                ),
+                            ],
+                            className="method-card",
+                        ),
+                    ],
+                    className="method-grid",
+                ),
+            ],
+            className="text-section",
+        ),
+
+        html.Section(
+            [
                 html.Div(
                     [
                         html.H3("Latest month"),
