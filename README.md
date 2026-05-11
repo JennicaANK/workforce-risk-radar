@@ -1,32 +1,64 @@
-# workforce-risk-radar
-Multimodal early warning system for workforce layoff trends using WARN, FRED, and GDELT data.
+# Workforce Risk Radar
+
+Multimodal early warning dashboard for California workforce layoff trends using WARN, FRED, GDELT, and layoff dataset features.
 
 ## Overview
-This project builds a multimodal early warning system for workforce layoff trends in California using:
 
-- California WARN Act layoff records
-- FRED macroeconomic indicators
-- Indeed job postings data
-- GDELT news sentiment data
+Workforce Risk Radar is a data science project that estimates monthly layoff risk in California. It combines public layoff notices, macroeconomic indicators, and news signals into a modeling pipeline, then presents the results in an interactive Dash dashboard.
 
-The objective is to identify leading indicators that precede increases in mass layoffs.
+The dashboard lets users review the project objective, explore EDA, inspect analysis methods, view major findings, and compare actual WARN layoffs against model predictions.
 
 ## Team Members
+
 - Athish Kumar
 - Aye Nyein Kyaw
 - Lila Nguyen
 
-# Workforce Risk Radar
+## Data Sources
 
-## 1. Project Summary
+- California WARN Act layoff records
+- FRED macroeconomic indicators
+- GDELT news volume and tone signals
+- Kaggle tech layoffs dataset
 
-Workforce Risk Radar is a data science dashboard that identifies early warning signals for workforce layoff risk in California. The project integrates multiple data sources—including WARN layoff notices, macroeconomic indicators, job posting trends, and news sentiment—to estimate monthly layoff risk.
+## Repository Structure
 
-The system processes raw data into structured features, applies predictive modeling, and presents results through an interactive Dash web application. The dashboard enables users to explore trends, understand modeling decisions, and interpret predicted risk levels.
+```text
+workforce-risk-radar/
+├── app/
+│   ├── app.py                    # Dash application entry point
+│   ├── app.yaml                  # Deployment configuration
+│   ├── requirements.txt          # Python dependencies for the app
+│   ├── assets/
+│   │   └── style.css             # Dashboard styling
+│   ├── pages/                    # Dash pages
+│   │   ├── home.py
+│   │   ├── objective.py
+│   │   ├── eda.py
+│   │   ├── analysis_methods.py
+│   │   ├── major_findings.py
+│   │   └── live_demo.py
+│   ├── utils/
+│   │   └── data_loader.py        # Helpers for loading processed CSV outputs
+│   └── data/
+│       ├── raw/                  # Source data snapshots
+│       ├── interim/              # Extracted/intermediate WARN tables
+│       └── processed/            # Final modeling outputs used by the dashboard
+├── notebooks/
+│   ├── 01_build_master_monthly.ipynb
+│   ├── 02_gdelt_news_signal.ipynb
+│   ├── 03_warn_processing.ipynb
+│   ├── 04_kaggle_tech_layoffs.ipynb
+│   ├── 05_WARN.ipynb
+│   ├── 06_preliminary_results.ipynb
+│   ├── 07_final_modeling.ipynb
+│   └── data/processed/           # Notebook-side processed exports
+├── data/                         # Root-level data folder
+├── LICENSE
+└── README.md
+```
 
----
-
-## 2. Setup Instructions
+## Setup
 
 ### Requirements
 
@@ -40,77 +72,76 @@ git clone https://github.com/JennicaANK/workforce-risk-radar.git
 cd workforce-risk-radar
 
 python -m venv venv
-source venv/bin/activate   # Mac/Linux
-# venv\Scripts\activate    # Windows
+source venv/bin/activate
 
-pip install -r requirements.txt
+pip install -r app/requirements.txt
 ```
 
-## 3. End-to-End Pipeline
+On Windows, activate the virtual environment with:
+
+```bash
+venv\Scripts\activate
+```
+
+## Run the Dashboard
+
+```bash
+cd app
+python app.py
+```
+
+The app runs locally in debug mode. Open the local URL printed in the terminal, typically `http://127.0.0.1:8050/`.
+
+## Pipeline
 
 ```text
 Data Sources
    |
-   |-- WARN Act Layoff Data (California)
-   |-- FRED Macroeconomic Indicators
-   |-- Indeed Job Postings Data
-   |-- GDELT News Sentiment Data
+   |-- California WARN layoff records
+   |-- FRED macroeconomic indicators
+   |-- GDELT news tone and volume features
+   |-- Kaggle tech layoffs dataset
    |
-Data Processing (notebooks/)
+Data Processing and Feature Engineering
    |
-   |-- Cleaning WARN data
-   |-- Building monthly dataset
-   |-- Generating news sentiment features
-   |-- Integrating external datasets
-   |-- Feature engineering (lags)
+   |-- Clean WARN records
+   |-- Build monthly layoff dataset
+   |-- Create GDELT news features
+   |-- Add macroeconomic indicators
+   |-- Generate lagged model features
    |
 Modeling
    |
-   |-- Train/test split (time-based)
-   |-- Model experimentation
+   |-- Time-based train/test split
+   |-- Model comparison
    |-- Final model selection
+   |-- Risk level assignment
    |
-Outputs (data/processed/)
+Dashboard Outputs
    |
    |-- master_monthly.csv
    |-- final_predictions.csv
    |-- final_risk_scores.csv
-   |-- metrics & coefficients
-   |
-Dashboard (app/)
-   |
-   |-- Loads processed data
-   |-- Displays EDA, methods, and results
+   |-- model metrics
+   |-- coefficients and feature importance
 ```
 
-## 4. Repository Structure & Key Code Locations
+## Key App Files
 
-```text
-workforce-risk-radar/
-│
-├── app/
-│   ├── app.py                # Main Dash application
-│   ├── pages/                # Dashboard pages
-│   ├── utils/
-│   │   └── data_loader.py    # Loads processed data
-│   └── assets/               # CSS styling
-│
-├── data/
-│   ├── raw/                  # Original datasets
-│   ├── interim/              # Intermediate data
-│   └── processed/            # Final model outputs
-│
-├── notebooks/                # Data pipeline & modeling
-│   ├── 01_build_master_monthly.ipynb     # Constructs main dataset
-│   ├── 02_gdelt_news_signal.ipynb        # Builds news sentiment features
-│   ├── 03_warn_processing.ipynb          # Cleans WARN layoff data
-│   ├── 04_kaggle_tech_layoffs.ipynb      # External layoffs dataset integration
-│   ├── 05_WARN.ipynb                     # Additional WARN analysis
-│   ├── 06_preliminary_results.ipynb      # Early modeling + insights
-│   ├── 07_final_modeling.ipynb           # Final model training
-│   └── 07_final_modeling-Copy1.ipynb     # Alternate/backup modeling version
-│
-├── requirements.txt
-├── README.md
-└── LICENSE
-```
+- `app/app.py`: creates the Dash app, registers pages, and builds the navigation.
+- `app/pages/home.py`: landing dashboard with latest risk level and actual-vs-predicted layoffs.
+- `app/pages/eda.py`: exploratory visualizations.
+- `app/pages/analysis_methods.py`: modeling and methodology page.
+- `app/pages/major_findings.py`: final results and interpretation.
+- `app/pages/live_demo.py`: interactive demo view.
+- `app/utils/data_loader.py`: loads processed CSV files from `app/data/processed/`.
+
+## Key Processed Outputs
+
+- `app/data/processed/master_monthly.csv`: final monthly modeling dataset.
+- `app/data/processed/final_predictions.csv`: actual and predicted WARN layoff values.
+- `app/data/processed/final_risk_scores.csv`: predicted layoffs with assigned risk levels.
+- `app/data/processed/regression_metrics.csv`: regression model performance.
+- `app/data/processed/classification_metrics.csv`: risk-level classification metrics.
+- `app/data/processed/final_model_coefficients.csv`: final model coefficients.
+- `app/data/processed/feature_importance.csv`: feature importance output.
