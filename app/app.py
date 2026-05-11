@@ -33,7 +33,7 @@ def update_nav_links(pathname):
     if not pathname:
         pathname = "/"
 
-    desired_order = ["Home", "Project Objective", "EDA", "Analysis Methods", "Major Findings"]
+    desired_order = ["Home", "Project Objective", "EDA", "Analysis Methods", "Major Findings", "Live Demo"]
     links = []
 
     for page_name in desired_order:

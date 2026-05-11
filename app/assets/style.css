@@ -217,6 +217,108 @@ body {
     color: #374151;
 }
 
+.live-demo-grid {
+    display: grid;
+    grid-template-columns: minmax(320px, 0.95fr) minmax(360px, 1.05fr);
+    gap: 18px;
+    align-items: start;
+    margin-bottom: 24px;
+}
+
+.live-demo-input-card,
+.live-demo-output-column {
+    min-width: 0;
+}
+
+.live-demo-input-card {
+    border-top: 4px solid #071633;
+}
+
+.live-demo-output-column {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.live-demo-output-column > h2 {
+    margin-bottom: -2px;
+}
+
+.live-demo-output-grid {
+    margin-bottom: 0;
+}
+
+.live-demo-metric-card {
+    min-height: 138px;
+}
+
+.live-demo-interpretation {
+    max-width: 720px;
+}
+
+.input-slider-block {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.slider-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: baseline;
+    margin-bottom: 10px;
+}
+
+.slider-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.slider-value {
+    flex: 0 0 auto;
+    min-width: 58px;
+    border-radius: 999px;
+    background: #dfe8f6;
+    color: #23406a;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    padding: 8px 11px;
+    text-align: center;
+}
+
+.input-slider-block .rc-slider {
+    margin: 0 8px;
+}
+
+.input-slider-block .rc-slider-track {
+    background-color: #2563eb;
+}
+
+.input-slider-block .rc-slider-rail {
+    background-color: #d8dee8;
+}
+
+.input-slider-block .rc-slider-dot {
+    border-color: #cbd5e1;
+}
+
+.input-slider-block .rc-slider-dot-active {
+    border-color: #2563eb;
+}
+
+.input-slider-block .rc-slider-handle {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14);
+}
+
+.input-slider-block .rc-slider-mark-text {
+    color: #64748b;
+    font-size: 12px;
+}
+
 .table-block {
     overflow-x: auto;
 }
@@ -295,8 +397,17 @@ li {
     .home-card-grid,
     .finding-grid,
     .source-grid,
-    .method-grid {
+    .method-grid,
+    .live-demo-grid {
         grid-template-columns: 1fr;
+    }
+
+    .live-demo-grid {
+        gap: 16px;
+    }
+
+    .live-demo-metric-card {
+        min-height: auto;
     }
 }
 
@@ -319,5 +430,15 @@ li {
 
     .risk-pill {
         font-size: 18px;
+    }
+
+    .slider-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .slider-value {
+        min-width: 52px;
     }
 }
